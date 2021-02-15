@@ -30,18 +30,18 @@ a2_sym = (c1_sym * c2_sym * r1_sym * r2_sym)...
 a3_sym = (c1_sym * c2_sym * c3_sym * r1_sym * r2_sym * r3_sym);
 
 % Realización Controlable
-p1_RC = -[a0_sym a1_sym a2_sym a3_sym];
+p1_RC = -[a0_sym a1_sym a2_sym];
 p2_RC = [zeros(length(p1_RC) - 1, 1) eye(length(p1_RC) - 1)];
 A1_sym = [p2_RC; p1_RC];
-B1_sym = 1;
-C1_sym = b0_sym;
+B1_sym = [0; 0; 1];
+C1_sym = [b0_sym 0 0];
 
 % Realización Observable
-p1_RO = -[a3_sym; a2_sym; a1_sym; a0_sym];
+p1_RO = -[a2_sym; a1_sym; a0_sym];
 p2_RO = [eye(length(p1_RO) - 1); zeros(1, length(p1_RO) - 1)];
 A2_sym = [p1_RO p2_RO];
-B2_sym = b0_sym;
-C2_sym = 1;
+B2_sym = [0; 0; b0_sym];
+C2_sym = [1 0 0];
 
 % Ecuación de Diferencias
 
@@ -81,24 +81,40 @@ G0 = tf(b, a);
 % Inciso 1
 % Definición de Variables
 b0 = G0.Numerator{1}(4);
-a0 = G0.Denominator{1}(1);
-a1 = G0.Denominator{1}(2);
-a2 = G0.Denominator{1}(3);
-a3 = G0.Denominator{1}(4);
+a0 = G0.Denominator{1}(4);
+a1 = G0.Denominator{1}(3);
+a2 = G0.Denominator{1}(2);
+a3 = G0.Denominator{1}(1);
 
 % Realización Controlable
-p1_RC_num = fliplr(-G0.Denominator{1});
+p1_RC_num = -[a0 a1 a2];
 p2_RC_num = [zeros(length(p1_RC_num) - 1, 1) eye(length(p1_RC_num) - 1)];
 A1 = [p2_RC_num; p1_RC_num];
-B1 = 1;
-C1 = G0.Numerator{1}(4);
+B1 = [0; 0; 1];
+C1 = [G0.Numerator{1}(4) 0 0];
 
 % Realización Observable
-p1_RO_num = (-G0.Denominator{1})';
+p1_RO_num = -[a2; a1; a0];
 p2_RO_num = [eye(length(p1_RO_num) - 1); zeros(1, length(p1_RO_num) - 1)];
 A2 = [p1_RO_num p2_RO_num];
-B2 = G0.Numerator{1}(4);
-C2 = 1;
+B2 = [0; 0; G0.Numerator{1}(4)];
+C2 = [1 0 0];
 
 % Inciso 3
 [A4,B4,C4,D4] = tf2ss(b,a);
+
+% Inciso 4
+% save linSys.mat linsys1
+load linSys.mat linsys1
+A5 = linsys1.A;
+B5 = linsys1.B;
+C5 = linsys1.C;
+D5 = linsys1.D;
+
+% Inciso 5
+s = tf('s');
+G1 = C1 * (inv((s * eye(3)) - A1)) * B1;
+G2 = C2 * (inv((s * eye(3)) - A2)) * B2;
+% G3 = C3 * (inv((s * eye(3)) - A3)) * B3;
+G4 = C4 * (inv((s * eye(3)) - A4)) * B4;
+G5 = C5 * (inv((s * eye(3)) - A5)) * B5;
