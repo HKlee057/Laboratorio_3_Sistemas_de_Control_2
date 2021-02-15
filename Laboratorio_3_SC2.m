@@ -43,11 +43,11 @@ a2 = (c1 * c2 * r1 * r2) + (c1 * c2 * r1 * r3) + ...
     (c2 * c3 * r1 * r3) + (c2 * c3 * r2 * r3);
 a3 = (c1 * c2 * c3 * r1 * r2 * r3);
 % Realización Controlable
-p1_RC = -[a3; a2; a1; a0];
-p2_RC = [eye(length(p1_RC) - 1); zeros(1, length(p1_RC) - 1)];
-A1_sym = [p1_RC p2_RC];
-B1_sym = b0;
-C1_sym = 1;
+p1_RC = -[a0 a1 a2 a3];
+p2_RC = [zeros(length(p1_RC) - 1, 1) eye(length(p1_RC) - 1)];
+A1_sym = [p2_RC ;p1_RC];
+B1_sym = 1;
+C1_sym = b0;
 
 % Realización Observable
 p1_RO = -[a3; a2; a1; a0];
