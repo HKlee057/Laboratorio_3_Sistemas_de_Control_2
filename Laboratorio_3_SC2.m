@@ -100,6 +100,11 @@ A2 = [p1_RO_num p2_RO_num];
 B2 = [0; 0; G0.Numerator{1}(4)];
 C2 = [1 0 0];
 
+A3=[-((r2+r1)/(r1*r2*c1)),1/(r2*c1),-1/(r2*c1);...
+    0,0,-1/(r3*c2);...
+    -1/(r2*c3),1/(r2*c3),-(r3+r2)/(r2*r3*c3)];
+B3=[1/(r1*c1);0;0];
+C3=[-0 1 0];
 % Inciso 3
 [A4,B4,C4,D4] = tf2ss(b,a);
 
@@ -115,6 +120,6 @@ D5 = linsys1.D;
 s = tf('s');
 G1 = C1 * (inv((s * eye(3)) - A1)) * B1;
 G2 = C2 * (inv((s * eye(3)) - A2)) * B2;
-% G3 = C3 * (inv((s * eye(3)) - A3)) * B3;
+G3 = C3 * (inv((s * eye(3)) - A3)) * B3;
 G4 = C4 * (inv((s * eye(3)) - A4)) * B4;
 G5 = C5 * (inv((s * eye(3)) - A5)) * B5;
